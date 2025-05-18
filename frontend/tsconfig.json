@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "target": "ES5",
+    "lib": ["DOM", "DOM.Iterable", "ES2015"],
+    "jsx": "react"
+  }
+}

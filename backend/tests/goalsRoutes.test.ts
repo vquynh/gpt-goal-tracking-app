@@ -59,5 +59,29 @@ describe('Routes', () => {
             const res = await request(app).delete('/api/goals/1');
             expect(res.status).toBe(204);
         });
+
+        it('GET /api/goals/:id/actions should return actions', async () => {
+            const mockActions = [{ id: 1, title: 'Action 1' }];
+            mockQuery.mockResolvedValue({ rows:  mockActions});
+            const res = await request(app).get('/api/goals/1/actions');
+            expect(res.status).toBe(200);
+            expect(res.body).toStrictEqual(mockActions);
+        });
+
+        it('POST /api/goals/:goalId/actions with valid body should create an action', async () => {
+            const mockInsert = [{ id: 1, title: 'New Action' }] ;
+            (db.default.query as jest.Mock).mockResolvedValue({ rows: mockInsert});
+            const res = await request(app)
+                .post('/api/goals/1/actions')
+                .send({
+                    title: 'Test Action',
+                    start_date: '2025-01-01',
+                    end_date: '2025-01-15',
+                    interval: 'daily',
+                    status: 'pending',
+                });
+            expect(201).toBe(res.status);
+            expect(mockInsert[0]).toStrictEqual(res.body);
+        });
     });
 });

@@ -1,4 +1,4 @@
-import { getGoals, createGoal, updateGoal, deleteGoal } from '../src/controllers/goals';
+import { getGoals, getGoalById, createGoal, updateGoal, deleteGoal } from '../src/controllers/goals';
 import { Request } from 'express';
 import { mockResponse } from './testUtils';
 import * as db from '../src/db';
@@ -20,6 +20,20 @@ describe('Goals Controller', () => {
         await getGoals(req, res);
 
         expect(res.json).toHaveBeenCalledWith(mockGoals);
+    });
+
+    it('getGoalById should return the correct goal', async () => {
+        const mockGoals = [{ id: 1, title: 'Test Goal' }];
+        (db.default.query as jest.Mock).mockResolvedValue({ rows: mockGoals });
+
+        const req = {
+            params: { id: '1' }
+        } as unknown as Request;
+        const res = mockResponse();
+
+        await getGoalById(req, res);
+
+        expect(res.json).toHaveBeenCalledWith(mockGoals[0]);
     });
 
     it('createGoal should create a new goal', async () => {
