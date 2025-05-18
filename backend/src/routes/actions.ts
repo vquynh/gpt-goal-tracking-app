@@ -1,60 +1,24 @@
 import express from 'express';
-import { getActions, createAction, updateAction, deleteAction } from '../controllers/actions';
+import { getActionById, updateAction, deleteAction } from '../controllers/actions';
 
 const router = express.Router();
 
 /**
  * @swagger
- * /api/actions/{goalId}:
+ * /api/actions/{id}:
  *   get:
- *     summary: Get all actions for a specific goal
+ *     summary: Get a specific action by ID
  *     parameters:
  *       - in: path
- *         name: goalId
+ *         name: id
  *         required: true
  *         schema:
  *           type: integer
  *     responses:
  *       200:
- *         description: A list of actions
+ *         description: The action with the given ID
  */
-router.get('/:goalId', getActions);
-
-/**
- * @swagger
- * /api/actions/{goalId}:
- *   post:
- *     summary: Create a new action for a specific goal
- *     parameters:
- *       - in: path
- *         name: goalId
- *         required: true
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               title:
- *                 type: string
- *               start_date:
- *                 type: string
- *                 format: date
- *               end_date:
- *                 type: string
- *                 format: date
- *               interval:
- *                 type: string
- *               status:
- *                 type: string
- *     responses:
- *       201:
- *         description: Action created
- */
-router.post('/:goalId', createAction);
+router.get('/:id', getActionById);
 
 /**
  * @swagger

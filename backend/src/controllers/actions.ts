@@ -1,7 +1,13 @@
 import { Request, Response } from 'express';
 import pool from '../db';
 
-export const getActions = async (req: Request, res: Response) => {
+export const getActionById = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await pool.query('SELECT * FROM goal_tracker.actions WHERE id = $1 LIMIT 1', [id]);
+    res.json(result.rows[0]);
+};
+
+export const getActionsByGoalId = async (req: Request, res: Response) => {
     const { goalId } = req.params;
     const result = await pool.query('SELECT * FROM goal_tracker.actions WHERE goal_id = $1', [goalId]);
     res.json(result.rows);

@@ -1,4 +1,4 @@
-import { getActions, createAction, updateAction, deleteAction } from '../src/controllers/actions';
+import {getActionById, createAction, updateAction, deleteAction, getActionsByGoalId} from '../src/controllers/actions';
 import { Request } from 'express';
 import { mockResponse } from "./testUtils";
 import * as db from '../src/db';
@@ -10,16 +10,28 @@ describe('Actions Controller', () => {
         jest.clearAllMocks();
     });
 
-    it('getActions should return actions for a goal', async () => {
+    it('getActionsByGoalId should return the actions of the given goal', async () => {
         const mockActions = [{ id: 1, title: 'Mock Action' }];
         (db.default.query as jest.Mock).mockResolvedValue({ rows: mockActions });
 
-        const req = { params: { goalId: '1' } } as unknown as Request;
+        const req = { params: { id: '1' } } as unknown as Request;
         const res = mockResponse();
 
-        await getActions(req, res);
+        await getActionsByGoalId(req, res);
 
         expect(res.json).toHaveBeenCalledWith(mockActions);
+    });
+
+    it('getActionById should return the action with the specific id', async () => {
+        const mockActions = [{ id: 1, title: 'Mock Action' }];
+        (db.default.query as jest.Mock).mockResolvedValue({ rows: mockActions });
+
+        const req = { params: { id: '1' } } as unknown as Request;
+        const res = mockResponse();
+
+        await getActionById(req, res);
+
+        expect(res.json).toHaveBeenCalledWith(mockActions[0]);
     });
 
     it('createAction should create a new action', async () => {
