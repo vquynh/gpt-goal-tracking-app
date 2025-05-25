@@ -8,6 +8,8 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
     const id = embeddedId || routeParams.id;
     const [goal, setGoal] = useState(null);
     const [actions, setActions] = useState([]);
+    const [error, setError] = useState('');
+
 
     useEffect(() => {
         const fetchGoal = async () => {
@@ -23,43 +25,41 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
             fetchActions();
         }
     }, [id]);
-    const handleAddAction = () => {
-        setActions([
-            ...actions,
-            {
-                id: null, // temporary ID
-                title: '',
-                startDate: '',
-                endDate: '',
-                interval: '',
-                status: 'pending',
-                isNew: true,
-            },
-        ]);
-    };
-
     const handleUpdate = async (index: number, field: string, value: string) => {
         const updated = [...actions];
         updated[index][field] = value;
         setActions(updated);
 
         const action = updated[index];
-
-        if (action.isNew) {
-            // Create a new action
-            const res = await axios.post(`http://localhost:3001/api/goals/${id}/actions`, {
-                title: action.title,
-                startDate: action.startDate,
-                endDate: action.endDate,
-                interval: action.interval,
-                status: action.status,
-            });
-            updated[index] = { ...res.data, isNew: false };
-            setActions(updated);
-        } else {
-            // Update existing
-            await axios.put(`http://localhost:3001/api/actions/${action.id}`, action);
+        const requiredFields = ['title', 'start_date', 'end_date', 'interval', 'status'];
+        const hasEmpty = requiredFields.some((f) => !action[f]);
+        if (hasEmpty) {
+            setError('All fields are required.');
+            return;
         }
+        setError('');
+
+        if (action.id) {
+            await axios.put(`/api/actions/${action.id}`, action);
+        } else {
+            const res = await axios.post(`/api/goals/${id}/actions`, action);
+            updated[index] = res.data;
+            setActions(updated);
+        }
+    };
+
+    const handleAddAction = () => {
+        setActions([
+            ...actions,
+            {
+                id: undefined,
+                title: '',
+                start_date: '',
+                end_date: '',
+                interval: '',
+                status: 'pending',
+            },
+        ]);
     };
 
     if (!goal) return <p>Loading...</p>;
@@ -70,6 +70,7 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
             <p>Deadline: {goal.deadline}</p>
 
             <h3 className="text-lg font-semibold mt-6">Actions</h3>
+            {error && <p className="text-red-500">{error}</p>}
             <div className="overflow-x-auto">
                 <table className="min-w-full border border-gray-300">
                     <thead className="bg-gray-100">
@@ -83,7 +84,7 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                     </thead>
                     <tbody>
                     {actions.map((action, index) => (
-                        <tr key={action.id} className="odd:bg-white even:bg-gray-50">
+                        <tr key={index} className="odd:bg-white even:bg-gray-50">
                             {['title', 'start_date', 'end_date', 'interval'].map((field) => (
                                 <td key={field} className="border p-2 group">
                                     <span className="block group-hover:hidden">{action[field]}</span>
@@ -103,11 +104,12 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                                     onChange={(e) => handleUpdate(index, 'status', e.target.value)}
                                 >
                                     <option value="pending">Pending</option>
-                                    <option value="done">Done</option>
                                     <option value="ongoing">Ongoing</option>
+                                    <option value="done">Done</option>
                                 </select>
                             </td>
-                        </tr>                    ))}
+                        </tr>
+                    ))}
                     </tbody>
                 </table>
             </div>
