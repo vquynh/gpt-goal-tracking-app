@@ -39,7 +39,6 @@ export const getActionsByGoalId = async (req: Request, res: Response) => {
 
 export const createAction = async (req: Request, res: Response) => {
     const { goalId } = req.params;
-    console.log(`goalId: ${goalId}`);
     const { title, interval, status } = req.body;
     const startDate = req.body.startDate || null;
     const endDate = req.body.endDate || null;
@@ -58,7 +57,6 @@ export const updateAction = async (req: Request, res: Response) => {
         'UPDATE goal_tracker.actions SET title = $1, start_date = $2, end_date = $3, interval = $4, status = $5 WHERE id = $6 RETURNING *',
         [title, startDate, endDate, interval, status, id]
     );
-    console.log(result.rows.map(toActionDTO())[0]);
     res.json(result.rows.map(toActionDTO())[0]);
 };
 
