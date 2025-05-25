@@ -2,6 +2,7 @@ import request from 'supertest';
 import * as db from '../src/db';
 import express from "express";
 import goalsRoutes from "../src/routes/goals";
+import {ActionRow, toActionDTO} from "../src/controllers/actions";
 
 const app = express();
 app.use(express.json());
@@ -69,8 +70,8 @@ describe('Routes', () => {
         });
 
         it('POST /api/goals/:goalId/actions with valid body should create an action', async () => {
-            const mockInsert = [{ id: 1, title: 'New Action' }] ;
-            (db.default.query as jest.Mock).mockResolvedValue({ rows: mockInsert});
+            const mockInsert: ActionRow[] = [{ id: 1, goal_id: 1, title: 'Test Action', start_date: '2025-01-15', end_date: '2025-01-20', interval: 'daily', status: 'pending' }];
+            mockQuery.mockResolvedValue({ rows: mockInsert});
             const res = await request(app)
                 .post('/api/goals/1/actions')
                 .send({
@@ -81,7 +82,7 @@ describe('Routes', () => {
                     status: 'pending',
                 });
             expect(201).toBe(res.status);
-            expect(mockInsert[0]).toStrictEqual(res.body);
+            expect(mockInsert.map(toActionDTO())[0]).toStrictEqual(res.body);
         });
     });
 });
