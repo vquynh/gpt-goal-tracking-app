@@ -13,7 +13,6 @@ function App() {
             </nav>
             <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/goal/:id" element={<GoalDetail />} />
                 <Route path="/goal/new" element={<GoalForm />} />
                 <Route path="/goal/:goalId/action/new" element={<ActionForm />} />
             </Routes>

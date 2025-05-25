@@ -58,9 +58,15 @@ router.post('/', createGoal);
 
 /**
  * @swagger
- * /api/goals:
- *   post:
- *     summary: Create a new goal
+ * /api/goals/{id}:
+ *   put:
+ *     summary: Update an existing goal
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -74,11 +80,26 @@ router.post('/', createGoal);
  *                 type: string
  *                 format: date
  *     responses:
- *       201:
- *         description: Goal created
+ *       200:
+ *         description: Goal updated
  */
 router.put('/:id', updateGoal);
 
+/**
+ * @swagger
+ * /api/goals/{id}:
+ *   delete:
+ *     summary: Delete a goal by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Goal deleted
+ */
 router.delete('/:id', deleteGoal);
 
 /**

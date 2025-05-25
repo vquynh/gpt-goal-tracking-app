@@ -15,6 +15,7 @@ export const getActionsByGoalId = async (req: Request, res: Response) => {
 
 export const createAction = async (req: Request, res: Response) => {
     const { goalId } = req.params;
+    console.log(`goalId: ${goalId}`);
     const { title, start_date, end_date, interval, status } = req.body;
     const result = await pool.query(
         'INSERT INTO goal_tracker.actions (goal_id, title, start_date, end_date, interval, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',

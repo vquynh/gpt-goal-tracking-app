@@ -4,7 +4,9 @@ import axios from 'axios';
 
 export default function ActionForm() {
     const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [interval, setInterval] = useState('');
     const [status, setStatus] = useState('pending');
     const navigate = useNavigate();
     const { goalId } = useParams();
@@ -13,10 +15,12 @@ export default function ActionForm() {
         e.preventDefault();
         await axios.post(`http://localhost:3001/api/goals/${goalId}/actions`, {
             title,
-            description,
+            start_date: startDate,
+            end_date: endDate,
+            interval,
             status,
         });
-        navigate(`/goal/${goalId}`);
+        navigate(`/`);
     };
 
     return (
@@ -28,11 +32,25 @@ export default function ActionForm() {
                 onChange={(e) => setTitle(e.target.value)}
                 required
             />
-            <textarea
+            <input
                 className="border p-2 w-full"
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+            />
+            <input
+                className="border p-2 w-full"
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+            />
+            <input
+                className="border p-2 w-full"
+                placeholder="Interval"
+                value={interval}
+                onChange={(e) => setInterval(e.target.value)}
                 required
             />
             <select

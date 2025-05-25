@@ -1,29 +1,30 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchGoals } from '../api/goals';
 import { Link } from 'react-router-dom';
-import React from "react";
+import React, {useEffect, useState} from "react";
+import GoalDetail from "./GoalDetail";
+import axios from "axios";
 
 export default function Dashboard() {
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['goals'],
-        queryFn: fetchGoals
-    });
+    const [goals, setGoals] = useState([]);
 
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error loading goals.</p>;
+    useEffect(() => {
+        const fetchGoals = async () => {
+            const res = await axios.get('http://localhost:3001/api/goals');
+            setGoals(res.data);
+        };
+        fetchGoals();
+    }, []);
 
     return (
-        <div>
-            <h1 className="text-xl font-bold mb-4">Goals</h1>
-            <ul>
-                {data.map((goal: any) => (
-                    <li key={goal.id}>
-                        <Link to={`/goal/${goal.id}`} className="text-blue-600 hover:underline">
-                            {goal.title}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
+        <div className="space-y-4">
+            <h1 className="text-2xl font-bold">Goals Dashboard</h1>
+
+            <Link to="/goal/new" className="bg-blue-500 text-white px-4 py-2 rounded">
+                Create New Goal
+            </Link>
+
+            {goals.map((goal) => (
+                <GoalDetail key={goal.id} embeddedId={goal.id} />
+            ))}
         </div>
     );
 }
