@@ -32,7 +32,7 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
         setActions(updated);
 
         const action = updated[index];
-        const requiredFields = ['title', 'start_date', 'end_date', 'interval', 'status'];
+        const requiredFields = ['title', 'startDate', 'endDate', 'interval', 'status'];
         const hasEmpty = requiredFields.some((f) => !action[f]);
         if (hasEmpty) {
             setError('All fields are required.');
@@ -41,9 +41,9 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
         setError('');
 
         if (action.id) {
-            await axios.put(`/api/actions/${action.id}`, action);
+            await axios.put(`http://localhost:3001/api/actions/${action.id}`, action);
         } else {
-            const res = await axios.post(`/api/goals/${id}/actions`, action);
+            const res = await axios.post(`http://localhost:3001/api/goals/${id}/actions`, action);
             updated[index] = res.data;
             setActions(updated);
         }
@@ -55,8 +55,8 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
             {
                 id: undefined,
                 title: '',
-                start_date: '',
-                end_date: '',
+                startDate: '',
+                endDate: '',
                 interval: '',
                 status: 'pending',
             },
@@ -86,10 +86,10 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                     <tbody>
                     {actions.map((action, index) => (
                         <tr key={index} className="odd:bg-white even:bg-gray-50">
-                            {['title', 'start_date', 'end_date', 'interval'].map((field) => (
+                            {['title', 'startDate', 'endDate', 'interval'].map((field) => (
                                 <td
                                     key={field}
-                                    className="border p-2 cursor-pointer"
+                                    className="border p-2 relative group hover:bg-yellow-50"
                                     onClick={() => setEditingCell({ index, field })}
                                 >
                                     {editingCell?.index === index && editingCell?.field === field ? (
@@ -102,12 +102,13 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                                             autoFocus
                                         />
                                     ) : (
-                                        <span>{action[field]}</span>
-                                    )}
+                                        <><span>{action[field]}</span><span
+                                            className="absolute top-1 right-1 text-gray-400 text-xs hidden group-hover:inline">✎</span></>
+                                        )}
                                 </td>
                             ))}
                             <td
-                                className="border p-2 cursor-pointer"
+                                className="border p-2 relative group hover:bg-yellow-50"
                                 onClick={() => setEditingCell({ index, field: 'status' })}
                             >
                                 {editingCell?.index === index && editingCell?.field === 'status' ? (
@@ -123,8 +124,9 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                                         <option value="done">Done</option>
                                     </select>
                                 ) : (
-                                    <span>{action.status}</span>
-                                )}
+                                    <><span>{action.status}</span><span
+                                        className="absolute top-1 right-1 text-gray-400 text-xs hidden group-hover:inline">✎</span></>
+                            )}
                             </td>
                         </tr>
                     ))}
