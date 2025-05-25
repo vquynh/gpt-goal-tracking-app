@@ -8,8 +8,8 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
     const id = embeddedId || routeParams.id;
     const [goal, setGoal] = useState(null);
     const [actions, setActions] = useState([]);
+    const [editingCell, setEditingCell] = useState<{ index: number; field: string } | null>(null);
     const [error, setError] = useState('');
-
 
     useEffect(() => {
         const fetchGoal = async () => {
@@ -25,6 +25,7 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
             fetchActions();
         }
     }, [id]);
+
     const handleUpdate = async (index: number, field: string, value: string) => {
         const updated = [...actions];
         updated[index][field] = value;
@@ -86,27 +87,44 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                     {actions.map((action, index) => (
                         <tr key={index} className="odd:bg-white even:bg-gray-50">
                             {['title', 'start_date', 'end_date', 'interval'].map((field) => (
-                                <td key={field} className="border p-2 group">
-                                    <span className="block group-hover:hidden">{action[field]}</span>
-                                    <input
-                                        type={field.includes('date') ? 'date' : 'text'}
-                                        className="hidden group-hover:block w-full border p-1"
-                                        value={action[field]}
-                                        onChange={(e) => handleUpdate(index, field, e.target.value)}
-                                    />
+                                <td
+                                    key={field}
+                                    className="border p-2 cursor-pointer"
+                                    onClick={() => setEditingCell({ index, field })}
+                                >
+                                    {editingCell?.index === index && editingCell?.field === field ? (
+                                        <input
+                                            type={field.includes('date') ? 'date' : 'text'}
+                                            className="w-full border p-1"
+                                            value={action[field]}
+                                            onChange={(e) => handleUpdate(index, field, e.target.value)}
+                                            onBlur={() => setEditingCell(null)}
+                                            autoFocus
+                                        />
+                                    ) : (
+                                        <span>{action[field]}</span>
+                                    )}
                                 </td>
                             ))}
-                            <td className="border p-2 group">
-                                <span className="block group-hover:hidden">{action.status}</span>
-                                <select
-                                    className="hidden group-hover:block w-full border p-1"
-                                    value={action.status}
-                                    onChange={(e) => handleUpdate(index, 'status', e.target.value)}
-                                >
-                                    <option value="pending">Pending</option>
-                                    <option value="ongoing">Ongoing</option>
-                                    <option value="done">Done</option>
-                                </select>
+                            <td
+                                className="border p-2 cursor-pointer"
+                                onClick={() => setEditingCell({ index, field: 'status' })}
+                            >
+                                {editingCell?.index === index && editingCell?.field === 'status' ? (
+                                    <select
+                                        className="w-full border p-1"
+                                        value={action.status}
+                                        onChange={(e) => handleUpdate(index, 'status', e.target.value)}
+                                        onBlur={() => setEditingCell(null)}
+                                        autoFocus
+                                    >
+                                        <option value="pending">Pending</option>
+                                        <option value="ongoing">Ongoing</option>
+                                        <option value="done">Done</option>
+                                    </select>
+                                ) : (
+                                    <span>{action.status}</span>
+                                )}
                             </td>
                         </tr>
                     ))}
