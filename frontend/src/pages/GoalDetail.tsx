@@ -84,48 +84,30 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                     <tbody>
                     {actions.map((action, index) => (
                         <tr key={action.id} className="odd:bg-white even:bg-gray-50">
-                            <td className="border p-2">
-                                <input
-                                    className="w-full border p-1"
-                                    value={action.title}
-                                    onChange={(e) => handleUpdate(index, 'title', e.target.value)}
-                                />
-                            </td>
-                            <td className="border p-2">
-                                <input
-                                    type="date"
-                                    className="w-full border p-1"
-                                    value={action.startDate}
-                                    onChange={(e) => handleUpdate(index, 'startDate', e.target.value)}
-                                />
-                            </td>
-                            <td className="border p-2">
-                                <input
-                                    type="date"
-                                    className="w-full border p-1"
-                                    value={action.endDate}
-                                    onChange={(e) => handleUpdate(index, 'endDate', e.target.value)}
-                                />
-                            </td>
-                            <td className="border p-2">
-                                <input
-                                    className="w-full border p-1"
-                                    value={action.interval}
-                                    onChange={(e) => handleUpdate(index, 'interval', e.target.value)}
-                                />
-                            </td>
-                            <td className="border p-2">
+                            {['title', 'start_date', 'end_date', 'interval'].map((field) => (
+                                <td key={field} className="border p-2 group">
+                                    <span className="block group-hover:hidden">{action[field]}</span>
+                                    <input
+                                        type={field.includes('date') ? 'date' : 'text'}
+                                        className="hidden group-hover:block w-full border p-1"
+                                        value={action[field]}
+                                        onChange={(e) => handleUpdate(index, field, e.target.value)}
+                                    />
+                                </td>
+                            ))}
+                            <td className="border p-2 group">
+                                <span className="block group-hover:hidden">{action.status}</span>
                                 <select
-                                    className="w-full border p-1"
+                                    className="hidden group-hover:block w-full border p-1"
                                     value={action.status}
                                     onChange={(e) => handleUpdate(index, 'status', e.target.value)}
                                 >
                                     <option value="pending">Pending</option>
                                     <option value="done">Done</option>
+                                    <option value="ongoing">Ongoing</option>
                                 </select>
                             </td>
-                        </tr>
-                    ))}
+                        </tr>                    ))}
                     </tbody>
                 </table>
             </div>
