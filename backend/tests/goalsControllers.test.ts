@@ -37,16 +37,13 @@ describe('Goals Controller', () => {
     });
 
     it('createGoal should create a new goal', async () => {
-        const mockInsert = { rows: [{ id: 1, title: 'New Goal' }] };
+        const mockInsert = { rows: [{ id: 1, title: 'New Goal', deadline: '2025-01-01' }] };
         (db.default.query as jest.Mock).mockResolvedValue(mockInsert);
 
         const req = {
             body: {
                 title: 'New Goal',
-                description: 'Goal Description',
-                startDate: '2025-01-01',
-                endDate: '2025-02-01',
-                status: 'active'
+                deadline: '2025-01-01',
             }
         } as Request;
         const res = mockResponse();
