@@ -33,8 +33,8 @@ describe('Actions Routes', () => {
                 .put('/api/actions/1')
                 .send({
                     title: 'Updated Action',
-                    start_date: '2025-01-01',
-                    end_date: '2025-01-15',
+                    startDate: '2025-01-01',
+                    endDate: '2025-01-15',
                     interval: 'weekly',
                     status: 'completed',
                 });

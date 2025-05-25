@@ -16,20 +16,23 @@ export const getActionsByGoalId = async (req: Request, res: Response) => {
 export const createAction = async (req: Request, res: Response) => {
     const { goalId } = req.params;
     console.log(`goalId: ${goalId}`);
-    const { title, start_date, end_date, interval, status } = req.body;
+    const { title, interval, status } = req.body;
+    const startDate = req.body.startDate || null;
+    const endDate = req.body.endDate || null;
     const result = await pool.query(
         'INSERT INTO goal_tracker.actions (goal_id, title, start_date, end_date, interval, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [goalId, title, start_date, end_date, interval, status]
+        [goalId, title, startDate, endDate, interval, status]
     );
     res.status(201).json(result.rows[0]);
 };
 
 export const updateAction = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const { title, start_date, end_date, interval, status } = req.body;
-    const result = await pool.query(
+    const { title, interval, status } = req.body;
+    const startDate = req.body.startDate || null;
+    const endDate = req.body.endDate || null;    const result = await pool.query(
         'UPDATE goal_tracker.actions SET title = $1, start_date = $2, end_date = $3, interval = $4, status = $5 WHERE id = $6 RETURNING *',
-        [title, start_date, end_date, interval, status, id]
+        [title, startDate, endDate, interval, status, id]
     );
     res.json(result.rows[0]);
 };

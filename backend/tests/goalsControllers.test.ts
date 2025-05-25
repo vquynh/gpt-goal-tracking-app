@@ -44,8 +44,8 @@ describe('Goals Controller', () => {
             body: {
                 title: 'New Goal',
                 description: 'Goal Description',
-                start_date: '2025-01-01',
-                end_date: '2025-02-01',
+                startDate: '2025-01-01',
+                endDate: '2025-02-01',
                 status: 'active'
             }
         } as Request;
@@ -66,8 +66,8 @@ describe('Goals Controller', () => {
             body: {
                 title: 'Updated Goal',
                 description: 'Updated description',
-                start_date: '2025-01-01',
-                end_date: '2025-02-01',
+                startDate: '2025-01-01',
+                endDate: '2025-02-01',
                 status: 'completed'
             }
         } as unknown as Request;

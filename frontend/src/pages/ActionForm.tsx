@@ -15,8 +15,8 @@ export default function ActionForm() {
         e.preventDefault();
         await axios.post(`http://localhost:3001/api/goals/${goalId}/actions`, {
             title,
-            start_date: startDate,
-            end_date: endDate,
+            startDate,
+            endDate,
             interval,
             status,
         });

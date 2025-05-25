@@ -31,8 +31,8 @@ describe('Routes', () => {
                 .send({
                     title: 'New Goal',
                     description: 'Test',
-                    start_date: '2025-01-01',
-                    end_date: '2025-02-01',
+                    startDate: '2025-01-01',
+                    endDate: '2025-02-01',
                     status: 'active'
                 });
             expect(res.status).toBe(201);
@@ -46,8 +46,8 @@ describe('Routes', () => {
                 .send({
                     title: 'Updated Goal',
                     description: 'Updated Description',
-                    start_date: '2025-01-01',
-                    end_date: '2025-02-01',
+                    startDate: '2025-01-01',
+                    endDate: '2025-02-01',
                     status: 'completed'
                 });
             expect(res.status).toBe(200);
@@ -75,8 +75,8 @@ describe('Routes', () => {
                 .post('/api/goals/1/actions')
                 .send({
                     title: 'Test Action',
-                    start_date: '2025-01-01',
-                    end_date: '2025-01-15',
+                    startDate: '2025-01-01',
+                    endDate: '2025-01-15',
                     interval: 'daily',
                     status: 'pending',
                 });

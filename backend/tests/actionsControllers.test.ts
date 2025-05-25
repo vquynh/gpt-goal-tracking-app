@@ -42,8 +42,8 @@ describe('Actions Controller', () => {
             params: { goalId: '1' },
             body: {
                 title: 'New Action',
-                start_date: '2025-01-01',
-                end_date: '2025-01-15',
+                startDate: '2025-01-01',
+                endDate: '2025-01-15',
                 interval: 'daily',
                 status: 'pending'
             }
@@ -64,8 +64,8 @@ describe('Actions Controller', () => {
             params: { id: '1' },
             body: {
                 title: 'Updated Action',
-                start_date: '2025-01-01',
-                end_date: '2025-01-15',
+                startDate: '2025-01-01',
+                endDate: '2025-01-15',
                 interval: 'weekly',
                 status: 'completed'
             }

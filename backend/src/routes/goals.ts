@@ -122,10 +122,10 @@ router.delete('/:id', deleteGoal);
  *             properties:
  *               title:
  *                 type: string
- *               start_date:
+ *               startDate:
  *                 type: string
  *                 format: date
- *               end_date:
+ *               endDate:
  *                 type: string
  *                 format: date
  *               interval:

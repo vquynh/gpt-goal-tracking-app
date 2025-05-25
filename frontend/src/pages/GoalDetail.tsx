@@ -23,12 +23,43 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
             fetchActions();
         }
     }, [id]);
+    const handleAddAction = () => {
+        setActions([
+            ...actions,
+            {
+                id: null, // temporary ID
+                title: '',
+                startDate: '',
+                endDate: '',
+                interval: '',
+                status: 'pending',
+                isNew: true,
+            },
+        ]);
+    };
 
     const handleUpdate = async (index: number, field: string, value: string) => {
         const updated = [...actions];
         updated[index][field] = value;
         setActions(updated);
-        await axios.put(`/api/actions/${updated[index].id}`, updated[index]);
+
+        const action = updated[index];
+
+        if (action.isNew) {
+            // Create a new action
+            const res = await axios.post(`http://localhost:3001/api/goals/${id}/actions`, {
+                title: action.title,
+                startDate: action.startDate,
+                endDate: action.endDate,
+                interval: action.interval,
+                status: action.status,
+            });
+            updated[index] = { ...res.data, isNew: false };
+            setActions(updated);
+        } else {
+            // Update existing
+            await axios.put(`http://localhost:3001/api/actions/${action.id}`, action);
+        }
     };
 
     if (!goal) return <p>Loading...</p>;
@@ -64,16 +95,16 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                                 <input
                                     type="date"
                                     className="w-full border p-1"
-                                    value={action.start_date}
-                                    onChange={(e) => handleUpdate(index, 'start_date', e.target.value)}
+                                    value={action.startDate}
+                                    onChange={(e) => handleUpdate(index, 'startDate', e.target.value)}
                                 />
                             </td>
                             <td className="border p-2">
                                 <input
                                     type="date"
                                     className="w-full border p-1"
-                                    value={action.end_date}
-                                    onChange={(e) => handleUpdate(index, 'end_date', e.target.value)}
+                                    value={action.endDate}
+                                    onChange={(e) => handleUpdate(index, 'endDate', e.target.value)}
                                 />
                             </td>
                             <td className="border p-2">
@@ -99,13 +130,13 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                 </table>
             </div>
             <div className="mt-2">
-                <a
-                    href={`/goal/${id}/action/new`}
+                <button
+                    onClick={handleAddAction}
                     className="inline-flex items-center justify-center bg-green-500 text-white rounded-full w-10 h-10 hover:bg-green-600"
                     title="Add Action"
                 >
                     +
-                </a>
+                </button>
             </div>
         </div>
     );
