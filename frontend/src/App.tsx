@@ -7,9 +7,6 @@ import React from "react";
 function App() {
     return (
         <div className="p-4">
-            <nav className="mb-4">
-                <Link to="/" className="text-blue-500 underline">Dashboard</Link>
-            </nav>
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/goal/new" element={<GoalForm />} />

@@ -10,6 +10,8 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
     const [actions, setActions] = useState([]);
     const [editingCell, setEditingCell] = useState<{ index: number; field: string } | null>(null);
     const [error, setError] = useState('');
+    const [editingField, setEditingField] = useState<'title' | 'deadline' | null>(null);
+    const [hoveredCell, setHoveredCell] = useState<{ index: number; field: string } | null>(null);
 
     useEffect(() => {
         const fetchGoal = async () => {
@@ -67,8 +69,70 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
 
     return (
         <div className="space-y-4 mt-4 border-t pt-4">
-            <h2 className="text-xl font-bold">{goal.title}</h2>
-            <p>Deadline: {goal.deadline}</p>
+            <div className="flex items-center justify-between">
+                <div
+                    className="group relative w-full"
+                    onMouseLeave={() => setHoveredCell(null)}
+                >
+                    {editingField === 'title' ? (
+                        <input
+                            type="text"
+                            value={goal.title}
+                            onChange={(e) => setGoal({ ...goal, title: e.target.value })}
+                            onBlur={async () => {
+                                await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                                setEditingField(null);
+                            }}
+                            onKeyDown={async (e) => {
+                                if (e.key === 'Enter') {
+                                    await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                                    setEditingField(null);
+                                }
+                            }}
+                            className="text-xl font-bold border px-2 py-1 w-full"
+                            autoFocus
+                        />
+                    ) : (
+                        <h2
+                            className="text-xl font-bold cursor-pointer inline-block"
+                            onClick={() => setEditingField('title')}
+                        >
+                            {goal.title}
+                            <span className="ml-2 text-gray-400 text-sm hidden group-hover:inline">✎</span>
+                        </h2>
+                    )}
+                </div>
+            </div>
+
+            <div className="group relative w-full">
+                {editingField === 'deadline' ? (
+                    <input
+                        type="date"
+                        value={goal.deadline}
+                        onChange={(e) => setGoal({ ...goal, deadline: e.target.value })}
+                        onBlur={async () => {
+                            await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                            setEditingField(null);
+                        }}
+                        onKeyDown={async (e) => {
+                            if (e.key === 'Enter') {
+                                await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                                setEditingField(null);
+                            }
+                        }}
+                        className="text-gray-700 border px-2 py-1"
+                        autoFocus
+                    />
+                ) : (
+                    <p
+                        className="cursor-pointer inline-block"
+                        onClick={() => setEditingField('deadline')}
+                    >
+                        Deadline: {goal.deadline}
+                        <span className="ml-2 text-gray-400 text-sm hidden group-hover:inline">✎</span>
+                    </p>
+                )}
+            </div>
 
             <h3 className="text-lg font-semibold mt-6">Actions</h3>
             {error && <p className="text-red-500">{error}</p>}
@@ -94,7 +158,7 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                                 >
                                     {editingCell?.index === index && editingCell?.field === field ? (
                                         <input
-                                            type={field.includes('date') ? 'date' : 'text'}
+                                            type={field.includes('Date') ? 'date' : 'text'}
                                             className="w-full border p-1"
                                             value={action[field]}
                                             onChange={(e) => handleUpdate(index, field, e.target.value)}
