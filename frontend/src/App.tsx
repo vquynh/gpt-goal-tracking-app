@@ -1,6 +1,5 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
-import GoalDetail from './pages/GoalDetail';
 import GoalForm from './pages/GoalForm';
 import ActionForm from './pages/ActionForm';
 import React from "react";

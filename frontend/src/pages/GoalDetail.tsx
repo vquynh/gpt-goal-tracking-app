@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import React from "react";
-
 
 export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
     const routeParams = useParams();
@@ -26,6 +24,13 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
         }
     }, [id]);
 
+    const handleUpdate = async (index: number, field: string, value: string) => {
+        const updated = [...actions];
+        updated[index][field] = value;
+        setActions(updated);
+        await axios.put(`/api/actions/${updated[index].id}`, updated[index]);
+    };
+
     if (!goal) return <p>Loading...</p>;
 
     return (
@@ -46,27 +51,61 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                     </tr>
                     </thead>
                     <tbody>
-                    {actions.map((action) => (
+                    {actions.map((action, index) => (
                         <tr key={action.id} className="odd:bg-white even:bg-gray-50">
-                            <td className="border p-2">{action.title}</td>
-                            <td className="border p-2">{action.start_date}</td>
-                            <td className="border p-2">{action.end_date}</td>
-                            <td className="border p-2">{action.interval}</td>
-                            <td className="border p-2">{action.status}</td>
+                            <td className="border p-2">
+                                <input
+                                    className="w-full border p-1"
+                                    value={action.title}
+                                    onChange={(e) => handleUpdate(index, 'title', e.target.value)}
+                                />
+                            </td>
+                            <td className="border p-2">
+                                <input
+                                    type="date"
+                                    className="w-full border p-1"
+                                    value={action.start_date}
+                                    onChange={(e) => handleUpdate(index, 'start_date', e.target.value)}
+                                />
+                            </td>
+                            <td className="border p-2">
+                                <input
+                                    type="date"
+                                    className="w-full border p-1"
+                                    value={action.end_date}
+                                    onChange={(e) => handleUpdate(index, 'end_date', e.target.value)}
+                                />
+                            </td>
+                            <td className="border p-2">
+                                <input
+                                    className="w-full border p-1"
+                                    value={action.interval}
+                                    onChange={(e) => handleUpdate(index, 'interval', e.target.value)}
+                                />
+                            </td>
+                            <td className="border p-2">
+                                <select
+                                    className="w-full border p-1"
+                                    value={action.status}
+                                    onChange={(e) => handleUpdate(index, 'status', e.target.value)}
+                                >
+                                    <option value="pending">Pending</option>
+                                    <option value="done">Done</option>
+                                </select>
+                            </td>
                         </tr>
                     ))}
                     </tbody>
                 </table>
             </div>
-
             <div className="mt-2">
-                <Link
-                    to={`/goal/${id}/action/new`}
+                <a
+                    href={`/goal/${id}/action/new`}
                     className="inline-flex items-center justify-center bg-green-500 text-white rounded-full w-10 h-10 hover:bg-green-600"
                     title="Add Action"
                 >
-                    <Plus size={20} />
-                </Link>
+                    +
+                </a>
             </div>
         </div>
     );
