@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import React from "react";
 
-const apiUrl = process.env.API_URL || 'http://localhost:3001'
+const apiUrl = process.env.VITE_API_URL || 'http://localhost:3001'
 
 export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
     const routeParams = useParams();

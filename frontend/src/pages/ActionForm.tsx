@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const apiUrl = process.env.API_URL || 'http://localhost:3001'
+const apiUrl = process.env.VITE_API_URL || 'http://localhost:3001'
 
 export default function ActionForm() {
     const [title, setTitle] = useState('');
