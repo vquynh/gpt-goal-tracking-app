@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import GoalDetail from "./GoalDetail";
 import axios from "axios";
 
+const apiUrl = process.env.API_URL || 'http://localhost:3001'
+
 export default function Dashboard() {
     const [goals, setGoals] = useState([]);
     const [creating, setCreating] = useState(false);
@@ -9,14 +11,14 @@ export default function Dashboard() {
 
     useEffect(() => {
         const fetchGoals = async () => {
-            const res = await axios.get('http://localhost:3001/api/goals');
+            const res = await axios.get(`${apiUrl}/api/goals`);
             setGoals(res.data);
         };
         fetchGoals();
     }, []);
     const handleCreateGoal = async () => {
         if (!newGoal.title || !newGoal.deadline) return;
-        const res = await axios.post('http://localhost:3001/api/goals', newGoal);
+        const res = await axios.post(`${apiUrl}/api/goals`, newGoal);
         setGoals([...goals, res.data]);
         setNewGoal({ title: '', deadline: '' });
         setCreating(false);

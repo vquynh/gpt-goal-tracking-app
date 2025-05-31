@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import React from "react";
 
+const apiUrl = process.env.API_URL || 'http://localhost:3001'
+
 export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
     const routeParams = useParams();
     const id = embeddedId || routeParams.id;
@@ -15,11 +17,11 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
 
     useEffect(() => {
         const fetchGoal = async () => {
-            const res = await axios.get(`http://localhost:3001/api/goals/${id}`);
+            const res = await axios.get(`${apiUrl}/api/goals/${id}`);
             setGoal(res.data);
         };
         const fetchActions = async () => {
-            const res = await axios.get(`http://localhost:3001/api/goals/${id}/actions`);
+            const res = await axios.get(`${apiUrl}/api/goals/${id}/actions`);
             setActions(Array.isArray(res.data) ? res.data : res.data.actions || []);
         };
         if (id) {
@@ -43,9 +45,9 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
         setError('');
 
         if (action.id) {
-            await axios.put(`http://localhost:3001/api/actions/${action.id}`, action);
+            await axios.put(`${apiUrl}/api/actions/${action.id}`, action);
         } else {
-            const res = await axios.post(`http://localhost:3001/api/goals/${id}/actions`, action);
+            const res = await axios.post(`${apiUrl}/api/goals/${id}/actions`, action);
             updated[index] = res.data;
             setActions(updated);
         }
@@ -80,12 +82,12 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                             value={goal.title}
                             onChange={(e) => setGoal({ ...goal, title: e.target.value })}
                             onBlur={async () => {
-                                await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                                await axios.put(`${apiUrl}/api/goals/${goal.id}`, { ...goal });
                                 setEditingField(null);
                             }}
                             onKeyDown={async (e) => {
                                 if (e.key === 'Enter') {
-                                    await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                                    await axios.put(`${apiUrl}/api/goals/${goal.id}`, { ...goal });
                                     setEditingField(null);
                                 }
                             }}
@@ -111,12 +113,12 @@ export default function GoalDetail({ embeddedId }: { embeddedId?: string }) {
                         value={goal.deadline}
                         onChange={(e) => setGoal({ ...goal, deadline: e.target.value })}
                         onBlur={async () => {
-                            await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                            await axios.put(`${apiUrl}/api/goals/${goal.id}`, { ...goal });
                             setEditingField(null);
                         }}
                         onKeyDown={async (e) => {
                             if (e.key === 'Enter') {
-                                await axios.put(`http://localhost:3001/api/goals/${goal.id}`, { ...goal });
+                                await axios.put(`${apiUrl}/api/goals/${goal.id}`, { ...goal });
                                 setEditingField(null);
                             }
                         }}

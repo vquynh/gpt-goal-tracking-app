@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api';
+const apiUrl = process.env.API_URL || 'http://localhost:3001'
 
 export const fetchGoals = async () => {
-    const res = await axios.get(`${API_URL}/goals`);
+    const res = await axios.get(`${apiUrl}/api/goals`);
     return res.data;
 };
 
 export const fetchGoal = async (id: string) => {
-    const res = await axios.get(`${API_URL}/goals/${id}`);
+    const res = await axios.get(`${apiUrl}/api/goals/${id}`);
     return res.data;
 };

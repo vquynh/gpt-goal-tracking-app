@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const apiUrl = process.env.API_URL || 'http://localhost:3001'
+
 export default function ActionForm() {
     const [title, setTitle] = useState('');
     const [startDate, setStartDate] = useState('');
@@ -13,7 +15,7 @@ export default function ActionForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await axios.post(`http://localhost:3001/api/goals/${goalId}/actions`, {
+        await axios.post(`${apiUrl}/api/goals/${goalId}/actions`, {
             title,
             startDate,
             endDate,
