@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as React from "react";
 import {useState} from "react";
 
-const apiUrl = process.env.VITE_API_URL || 'http://localhost:3001'
+const apiUrl = import.meta.env.VITE_API_URL
 
 export default function GoalForm() {
     const [title, setTitle] = useState('');

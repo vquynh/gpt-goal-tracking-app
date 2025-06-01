@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = process.env.VITE_API_URL || 'http://localhost:3001'
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 export const fetchGoals = async () => {
     const res = await axios.get(`${apiUrl}/api/goals`);

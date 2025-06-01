@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import GoalDetail from "./GoalDetail";
 import axios from "axios";
 
-const apiUrl = process.env.VITE_API_URL || 'http://localhost:3001'
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 export default function Dashboard() {
     const [goals, setGoals] = useState([]);
