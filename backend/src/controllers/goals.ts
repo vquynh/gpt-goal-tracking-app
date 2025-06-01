@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import pool from '../db';
 
 export const getGoals = async (_req: Request, res: Response) => {
+    console.log(`Connecting to database: ${pool.options.host} : ${pool.options.port} / ${pool.options.database}`);
     const result = await pool.query('SELECT * FROM goal_tracker.goals');
     res.json(result.rows);
 };

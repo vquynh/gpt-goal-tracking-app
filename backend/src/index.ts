@@ -5,9 +5,13 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import goalRoutes from './routes/goals';
 import actionRoutes from './routes/actions';
+import dotenv from 'dotenv';
 
 const app = express();
+dotenv.config();
 const port = process.env.PORT || 3001;
+const apiUrl = process.env.URL || 'http://localhost:3001';
+const frontendApiUrl = process.env.FRONTEND_URL || 'http://localhost:4173';
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -19,7 +23,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: 'http://localhost:3001'
+                url: apiUrl
             }
         ]
     },
@@ -30,6 +34,7 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(cors());
+app.use(cors({ origin: frontendApiUrl }));
 app.use(bodyParser.json());
 
 app.use('/api/goals', goalRoutes);
